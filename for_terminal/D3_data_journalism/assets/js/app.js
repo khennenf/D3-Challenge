@@ -20,15 +20,14 @@ var svg = d3.select(".chart")
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+d3.csv("assets/data/data.csv").then(function(theData) {
 
-  d3.csv("assets/data/data.csv").then(function(theData) {
-
-    // Step 1: Parse Data/Cast as numbers
-    // ==============================
-    theData.forEach(function(data) {
-      data.income = +data.income;
-      data.obesity = +data.obesity;
-    });
+// Step 1: Parse Data/Cast as numbers
+// ==============================
+theData.forEach(function(data) {
+    data.income = +data.income;
+    data.obesity = +data.obesity;
+});
 
 
 //Create scale functions
@@ -57,31 +56,56 @@ var circlesGroup = chartGroup.selectAll("circle")
 .data(theData)
 .enter()
 .append("circle")
-.attr("cx", d => xLinearScale(d.income))
-.attr("cy", d => yLinearScale(d.obesity))
-.attr("r", "15")
-.attr("fill", "lightskyblue")
-.attr("opacity", "1");
+    .attr("cx", d => xLinearScale(d.income))
+    .attr("cy", d => yLinearScale(d.obesity))
+    .attr("r", "15")
+    .attr("fill", "lightskyblue")
+    .attr("opacity", "1")
+    .text(function(d) {
+        console.log(d.abbr);
+        return d.abbr;
+        })
+
+svg.selectAll("text")
+.data(theData)
+.enter()
+.append("text")
+.attr("y", 0 - margin.left + 40)
+.attr("x", 0 - (height / 2))
+.text(function(d) {
+    console.log(d.abbr);
+    return d.abbr;
+    })
+
+
+
+// var content = d3.select("g").selectAll("text").data(theData);
+// content.enter().append("text").each(function(d){
+//     d3.select(this).attr("cx", d => xLinearScale(d.income)).attr("cy", d => yLinearScale(d.obesity))
+//     .text(theData.abbr)
+// })
+
+
 
 //Create tool tip
-var toolTip = d3.tip()
-.attr("class", "tooltip") //style
-.offset([80, -60]) //placement
-.html(function(d) { //structure/content
-  return (`${d.abbr}<br>Income: ${d.income}<br>Obesity Rate: ${d.obesity}`);
-});
+// var toolTip = d3.tip()
+// .attr("class", "tooltip") //style
+// .offset([80, -60]) //placement
+// .html(function(d) { //structure/content
+//   return (`${d.abbr}<br>Income: ${d.income}<br>Obesity Rate: ${d.obesity}`);
+// });
 
-//Create tooltip in the chart
-chartGroup.call(toolTip)
+// //Create tooltip in the chart
+// chartGroup.call(toolTip)
 
-//Create event listeners to display
-circlesGroup.on("mouseover", function(data) {
-    toolTip.show(data, this);
-  })
-    // onmouseout event
-    .on("mouseout", function(data, index) {
-      toolTip.hide(data);
-    });
+// //Create event listeners to display
+// circlesGroup.on("mouseover", function(data) {
+//     toolTip.show(data, this);
+//   })
+//     // onmouseout event
+//     .on("mouseout", function(data, index) {
+//       toolTip.hide(data);
+//     });
 
 
 chartGroup.append("text")
@@ -96,6 +120,17 @@ chartGroup.append("text")
     .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
     .attr("class", "axisText")
     .text("Household Income Median ($)");
+
+
+
+
+
+// chartGroup.append("text")
+//     .data(theData)
+//     .enter()
+//     .attr("cx", d => xLinearScale(d.income))
+//     .attr("cy", d => yLinearScale(d.obesity))
+//     .text(`${d.abbr}`);
 
   }).catch(function(error) {
     console.log(error);
