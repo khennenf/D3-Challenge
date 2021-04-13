@@ -38,7 +38,7 @@ var xLinearScale = d3.scaleLinear()
 
 var yLinearScale = d3.scaleLinear()
 // .domain([20, d3.max(theData, d => d.obesity)])
-.domain([20, 35])
+.domain([20, 40])
 .range([height, 0]);
 
 //Create axis functions
@@ -73,21 +73,24 @@ var node = svg.selectAll("g")
         .enter()
         .append("g")
 
-node.append("text")
-  .attr("x", d => xLinearScale(d.income) - 8)
-  .attr("y", d => yLinearScale(d.obesity) + 3)
-      .text(function(d) {
-        console.log(d.abbr);
-        return d.abbr;
-        })
 
 node.append("circle")
     .attr("cx", d => xLinearScale(d.income))
     .attr("cy", d => yLinearScale(d.obesity))
-    .attr("r", "20")
+    .attr("r", "15")
     .attr("fill", "lightskyblue")
-    .attr("opacity", ".1")
+    .attr("opacity", "1")
     .text(function(d) {
+        console.log(d.abbr);
+        return d.abbr;
+        })
+
+node.append("text")
+  .attr("x", d => xLinearScale(d.income) - 8)
+  .attr("y", d => yLinearScale(d.obesity) + 5)
+  .attr("stroke", "ghostwhite")
+  .attr("font-size", "11px")
+      .text(function(d) {
         console.log(d.abbr);
         return d.abbr;
         })
