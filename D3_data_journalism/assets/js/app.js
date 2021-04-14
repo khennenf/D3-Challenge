@@ -1,12 +1,12 @@
 //Define SVG height & width
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 600;
 
 //Define margine
 var margin = {
   top: 30,
   right: 40,
-  bottom: 60,
+  bottom: 100,
   left: 50
 };
 
@@ -28,7 +28,7 @@ chartGroup.append("text")
   .attr("x", (width / 2))             
   .attr("y", 0 - (margin.top / 5))
   .attr("text-anchor", "middle")  
-  .style("font-size", "16px") 
+  .style("font-size", "25px") 
   .style("text-decoration", "underline")  
   .text("Obesity vs Median Household Income");
 
@@ -111,7 +111,7 @@ circlesGroup.on("mouseover", function(data) {
 //Add y axis label
 chartGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left + 10)
+    .attr("y", 0 - margin.left)
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .attr("class", "axisText")
