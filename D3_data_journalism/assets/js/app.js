@@ -4,9 +4,9 @@ var svgHeight = 600;
 
 //Define margine
 var margin = {
-  top: 30,
+  top: 50,
   right: 40,
-  bottom: 100,
+  bottom: 150,
   left: 50
 };
 
@@ -26,7 +26,7 @@ var chartGroup = svg.append("g")
  //Add Chart Title 
 chartGroup.append("text")
   .attr("x", (width / 2))             
-  .attr("y", 0 - (margin.top / 5))
+  .attr("y", 0 - (margin.top / 2))
   .attr("text-anchor", "middle")  
   .style("font-size", "25px") 
   .style("text-decoration", "underline")  
