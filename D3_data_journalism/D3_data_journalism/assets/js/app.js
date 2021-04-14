@@ -1,11 +1,13 @@
+//Define SVG height & width
 var svgWidth = 960;
 var svgHeight = 500;
 
+//Define margine
 var margin = {
-  top: 20,
+  top: 30,
   right: 40,
   bottom: 60,
-  left: 100
+  left: 50
 };
 
 var width = svgWidth - margin.left - margin.right;
@@ -17,28 +19,35 @@ var svg = d3.select(".chart")
   .attr("width", svgWidth)
   .attr("height", svgHeight);
 
+ //Define Chartgroup 
 var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+ //Add Chart Title 
+chartGroup.append("text")
+  .attr("x", (width / 2))             
+  .attr("y", 0 - (margin.top / 5))
+  .attr("text-anchor", "middle")  
+  .style("font-size", "16px") 
+  .style("text-decoration", "underline")  
+  .text("Obesity vs Median Household Income");
+
+//Bring in data  
 d3.csv("assets/data/data.csv").then(function(theData) {
 
-// Step 1: Parse Data/Cast as numbers
-// ==============================
+  //Parse Data/Cast as numbers
 theData.forEach(function(data) {
     data.income = +data.income;
     data.obesity = +data.obesity;
 });
 
-
 //Create scale functions
 var xLinearScale = d3.scaleLinear()
-// .domain([20000, d3.max(theData, d => d.income)])
-.domain([20000, 72000])
+.domain([35000, 80000])
 .range([0, width]);
 
 var yLinearScale = d3.scaleLinear()
-// .domain([20, d3.max(theData, d => d.obesity)])
-.domain([20, 40])
+.domain([20, 38])
 .range([height, 0]);
 
 //Create axis functions
@@ -55,51 +64,35 @@ chartGroup.append("g")
 
 //Create Circles
 var circlesGroup = chartGroup.selectAll("circle")
-// .data(theData)
-// .enter()
-// .append("circle")
-//     .attr("cx", d => xLinearScale(d.income))
-//     .attr("cy", d => yLinearScale(d.obesity))
-//     .attr("r", "15")
-//     .attr("fill", "lightskyblue")
-//     .attr("opacity", "1")
-//     .text(function(d) {
-//         console.log(d.abbr);
-//         return d.abbr;
-//         })
-
-var node = svg.selectAll("g")
-        .data(theData)
-        .enter()
-        .append("g")
-
-
-node.append("circle")
+.data(theData)
+.enter()
+.append("circle")
     .attr("cx", d => xLinearScale(d.income))
     .attr("cy", d => yLinearScale(d.obesity))
     .attr("r", "15")
-    .attr("fill", "lightskyblue")
-    .attr("opacity", "1")
-    .text(function(d) {
-        console.log(d.abbr);
-        return d.abbr;
-        })
+    .attr("fill", "royalblue")
+    .attr("opacity", ".6")
 
-node.append("text")
-  .attr("x", d => xLinearScale(d.income) - 8)
-  .attr("y", d => yLinearScale(d.obesity) + 5)
-  .attr("stroke", "ghostwhite")
-  .attr("font-size", "11px")
-      .text(function(d) {
-        console.log(d.abbr);
-        return d.abbr;
-        })
+
+//Add State Abbr Labels
+var textGroup = chartGroup.selectAll("text.values")
+.data(theData)
+.enter()
+.append("text")
+.attr("x", d => xLinearScale(d.income) - 6)
+.attr("y", d => yLinearScale(d.obesity) + 3)
+.attr("stroke", "ghostwhite")
+.attr("font-size", "10px")
+    .text(function(d) {
+      return d.abbr;
+      })        
+
 
 //Create tool tip
 var toolTip = d3.tip()
-.attr("class", "tooltip") //style
-.offset([80, -60]) //placement
-.html(function(d) { //structure/content
+.attr("class", "tooltip")
+.offset([80, -60]) 
+.html(function(d) { 
   return (`${d.abbr}<br>Income: ${d.income}<br>Obesity Rate: ${d.obesity}`);
 });
 
@@ -115,22 +108,22 @@ circlesGroup.on("mouseover", function(data) {
       toolTip.hide(data);
     });
 
-
+//Add y axis label
 chartGroup.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - margin.left + 40)
+    .attr("y", 0 - margin.left + 10)
     .attr("x", 0 - (height / 2))
     .attr("dy", "1em")
     .attr("class", "axisText")
     .text("Obese (%)");
 
+//Add x axis label    
 chartGroup.append("text")
     .attr("transform", `translate(${width / 2}, ${height + margin.top + 30})`)
     .attr("class", "axisText")
-    .text("Household Income Median ($)");
+    .text("Median Household Income($)");
 
-
-
+//Log errors
   }).catch(function(error) {
     console.log(error);
   });
